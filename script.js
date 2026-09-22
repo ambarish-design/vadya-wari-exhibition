@@ -63,27 +63,18 @@ document.querySelector('#enquiry-form').addEventListener('submit', (event) => {
   window.location.href = `mailto:hello@baithak.org?subject=${subject}&body=${body}`;
 });
 
-const exhibitData = {
-  tanpura: { number: '01 / 03', name: 'Tanpura', copy: 'A long, steady resonance that gives other sounds somewhere to rest.' },
-  bansuri: { number: '02 / 03', name: 'Bansuri', copy: 'A breath travelling through bamboo, shaped by fingers and attention.' },
-  pakhawaj: { number: '03 / 03', name: 'Pakhawaj', copy: 'A pulse with a body: deep, bright and carried by the meeting of hand and skin.' }
+const cabinetData = {
+  tanpura: { number: '01', meta: 'STRING · RESONANCE', name: 'Tanpura', copy: 'Its steady voice creates the ground from which other sounds can rise. Listen for the way one note holds a whole room.' },
+  bansuri: { number: '02', meta: 'BAMBOO · BREATH', name: 'Bansuri', copy: 'A column of breath finds its way through bamboo. Sound begins long before the note arrives.' },
+  pakhawaj: { number: '03', meta: 'SKIN · PULSE', name: 'Pakhawaj', copy: 'A hand meets a stretched surface and a pulse takes shape—deep, bright and carried through the body.' },
+  ghatam: { number: '04', meta: 'CLAY · RHYTHM', name: 'Ghatam', copy: 'A clay vessel becomes an instrument when touch discovers the many voices held inside one form.' }
 };
 
-const room = document.querySelector('.sound-room-stage');
-const roomPicks = document.querySelectorAll('.pick');
-const playButton = document.querySelector('.stage-play');
+const drawers = document.querySelectorAll('.drawer');
+const objectCard = document.querySelector('.object-card');
+const objectListen = document.querySelector('.object-listen');
 let activeExhibit = 'tanpura';
 let audioContext;
-let audioTimer;
-let isPlaying = false;
-
-function stopSound() {
-  window.clearInterval(audioTimer);
-  isPlaying = false;
-  room.classList.remove('playing');
-  playButton.setAttribute('aria-pressed', 'false');
-  playButton.innerHTML = '<span aria-hidden="true">▶</span> Start listening';
-}
 
 function tone(context, frequency, start, duration, type = 'sine', volume = .08) {
   const oscillator = context.createOscillator();
@@ -98,11 +89,11 @@ function tone(context, frequency, start, duration, type = 'sine', volume = .08) 
   oscillator.stop(start + duration + .04);
 }
 
-function strike(context, start) {
+function strike(context, start, frequency = 150) {
   const oscillator = context.createOscillator();
   const gain = context.createGain();
   oscillator.type = 'sine';
-  oscillator.frequency.setValueAtTime(150, start);
+  oscillator.frequency.setValueAtTime(frequency, start);
   oscillator.frequency.exponentialRampToValueAtTime(65, start + .23);
   gain.gain.setValueAtTime(.14, start);
   gain.gain.exponentialRampToValueAtTime(.001, start + .38);
@@ -116,40 +107,28 @@ function playPhrase() {
     [130.81, 196, 261.63, 392].forEach((note, index) => tone(audioContext, note, now + index * .16, .8, 'sine', .035));
   } else if (activeExhibit === 'bansuri') {
     [392, 440, 523.25, 440].forEach((note, index) => tone(audioContext, note, now + index * .22, .32, 'sine', .055));
-  } else {
+  } else if (activeExhibit === 'pakhawaj') {
     strike(audioContext, now); strike(audioContext, now + .32); strike(audioContext, now + .56);
+  } else {
+    strike(audioContext, now, 240); strike(audioContext, now + .28, 190); strike(audioContext, now + .54, 280);
   }
 }
 
-function startSound() {
-  audioContext = audioContext || new (window.AudioContext || window.webkitAudioContext)();
-  audioContext.resume();
-  isPlaying = true;
-  room.classList.add('playing');
-  playButton.setAttribute('aria-pressed', 'true');
-  playButton.innerHTML = '<span aria-hidden="true">■</span> Pause listening';
-  playPhrase();
-  audioTimer = window.setInterval(playPhrase, activeExhibit === 'pakhawaj' ? 1050 : 1200);
-}
-
-playButton.addEventListener('click', () => isPlaying ? stopSound() : startSound());
-roomPicks.forEach((pick) => pick.addEventListener('click', () => {
-  const wasPlaying = isPlaying;
-  stopSound();
-  activeExhibit = pick.dataset.exhibit;
-  const exhibit = exhibitData[activeExhibit];
-  room.dataset.active = activeExhibit;
-  document.querySelector('.stage-number').textContent = exhibit.number;
-  document.querySelector('#instrument-name').textContent = exhibit.name;
-  document.querySelector('#instrument-copy').textContent = exhibit.copy;
-  roomPicks.forEach((item) => item.classList.toggle('active', item === pick));
-  if (wasPlaying) startSound();
+drawers.forEach((drawer) => drawer.addEventListener('click', () => {
+  activeExhibit = drawer.dataset.drawer;
+  const exhibit = cabinetData[activeExhibit];
+  drawers.forEach((item) => { item.classList.toggle('active', item === drawer); item.setAttribute('aria-selected', item === drawer); });
+  objectCard.dataset.object = activeExhibit;
+  objectCard.querySelector('.object-number').textContent = exhibit.number;
+  objectCard.querySelector('.object-meta').textContent = exhibit.meta;
+  objectCard.querySelector('h3').textContent = exhibit.name;
+  objectCard.querySelector('.object-copy > p:not(.object-meta)').textContent = exhibit.copy;
 }));
 
-room.querySelector('.stage-instrument').addEventListener('pointermove', (event) => {
-  const bounds = event.currentTarget.getBoundingClientRect();
-  const x = ((event.clientX - bounds.left) / bounds.width) * 100;
-  const y = ((event.clientY - bounds.top) / bounds.height) * 100;
-  room.style.setProperty('--stage-x', `${x}%`);
-  room.style.setProperty('--stage-y', `${y}%`);
+objectListen.addEventListener('click', () => {
+  audioContext = audioContext || new (window.AudioContext || window.webkitAudioContext)();
+  audioContext.resume();
+  playPhrase();
+  objectListen.innerHTML = '<span aria-hidden="true">✓</span> Sound study played';
+  window.setTimeout(() => { objectListen.innerHTML = '<span aria-hidden="true">▶</span> Hear a sound study'; }, 1700);
 });

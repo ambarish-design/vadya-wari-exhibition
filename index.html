@@ -45,22 +45,18 @@
         </div>
       </section>
 
-      <section class="sound-room" id="sound-room" aria-labelledby="sound-room-title">
-        <div class="sound-room-heading">
-          <p class="section-label">A digital listening room</p>
-          <h2 id="sound-room-title">Move through the exhibition. Then make a sound.</h2>
-          <p>This is a small, responsive sketch of what a live encounter can begin. Move your cursor across an instrument, choose it, then press play. The sound changes with your movement.</p>
-        </div>
-        <div class="sound-room-stage" data-active="tanpura">
-          <div class="stage-copy"><span class="stage-number">01 / 03</span><h3 id="instrument-name">Tanpura</h3><p id="instrument-copy">A long, steady resonance that gives other sounds somewhere to rest.</p><button class="stage-play" type="button" aria-pressed="false"><span aria-hidden="true">▶</span> Start listening</button><p class="stage-instruction">Move across the instrument while it plays.</p></div>
-          <div class="stage-instrument" aria-hidden="true"><span class="stage-halo"></span><span class="stage-neck"></span><span class="stage-body"></span><i class="stage-string s1"></i><i class="stage-string s2"></i><i class="stage-string s3"></i><i class="stage-string s4"></i><span class="stage-ripple r1"></span><span class="stage-ripple r2"></span></div>
-          <div class="stage-picks" role="group" aria-label="Choose an instrument">
-            <button class="pick active" data-exhibit="tanpura"><span>01</span>Tanpura</button>
-            <button class="pick" data-exhibit="bansuri"><span>02</span>Bansuri</button>
-            <button class="pick" data-exhibit="pakhawaj"><span>03</span>Pakhawaj</button>
+      <section class="cabinet" id="sound-room" aria-labelledby="cabinet-title">
+        <div class="cabinet-heading"><p class="section-label">Enter the exhibition</p><h2 id="cabinet-title">Open a drawer. Meet an instrument before you meet its name.</h2><p>Vādya Wāri begins with a collection, but it is not a catalogue. Choose a drawer to uncover a voice, a material and a way of making sound.</p></div>
+        <div class="cabinet-body">
+          <div class="cabinet-drawers" role="tablist" aria-label="Instrument drawers">
+            <button class="drawer active" role="tab" aria-selected="true" data-drawer="tanpura"><span>01</span><b>Tanpura</b><i>string</i></button>
+            <button class="drawer" role="tab" aria-selected="false" data-drawer="bansuri"><span>02</span><b>Bansuri</b><i>breath</i></button>
+            <button class="drawer" role="tab" aria-selected="false" data-drawer="pakhawaj"><span>03</span><b>Pakhawaj</b><i>skin</i></button>
+            <button class="drawer" role="tab" aria-selected="false" data-drawer="ghatam"><span>04</span><b>Ghatam</b><i>clay</i></button>
           </div>
+          <article class="object-card" data-object="tanpura" aria-live="polite"><span class="object-number">01</span><div class="object-figure tanpura-figure" aria-hidden="true"><i></i><i></i><i></i><i></i></div><div class="object-copy"><p class="object-meta">STRING · RESONANCE</p><h3>Tanpura</h3><p>Its steady voice creates the ground from which other sounds can rise. Listen for the way one note holds a whole room.</p><button class="object-listen" type="button"><span aria-hidden="true">▶</span> Hear a sound study</button></div></article>
         </div>
-        <p class="sound-note">These are digital sound studies built into the prototype. The final exhibition should use short recordings made or licensed specifically for Vādya Wāri.</p>
+        <p class="cabinet-note">The V2 cabinet uses digital sound studies as interaction prototypes. Real instrument recordings will replace them in the public exhibition.</p>
       </section>
 
       <section class="manifesto section-grid" id="encounter" aria-labelledby="encounter-title">
